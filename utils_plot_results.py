@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Sun May  7 10:36:56 2023
-
-@author: len0x
-"""
 
 import pickle
 import matplotlib.pyplot as plt
