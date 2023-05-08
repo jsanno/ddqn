@@ -34,15 +34,16 @@ if __name__ == "__main__":
     pickle_out.close()
     
     policy = 'DDQN_policy_scenario_1' 
-    weights = 'DDQN_weights_scenario_1'
-    
+    weights = 'DDQN_weights_scenario_1'    
     view_DDQN_policy(policy,weights)
-
+   
+    ddqn_vs_conventional(init_state,weights)   
     
-    ddqn_vs_conventional(init_state,weights)
-    view_HJB_policy(os.getcwd() + '/bocop_trajectories/')
+    hjb_policy = 'HJB_policy_scenario_1'
+    hjb_trajectories = 'HJB_trajectories_scenario_1'
+    view_HJB_policy(hjb_policy,hjb_trajectories)
     
-    pickle_in = open('BOCOP_trajectory_costs', 'rb')
+    pickle_in = open('HJB_trajectory_costs', 'rb')
     hjb_costs = pickle.load(pickle_in) 
     delta_t = data['delta_t']
     print(f'HJB cost: {np.mean(hjb_costs)*delta_t}')

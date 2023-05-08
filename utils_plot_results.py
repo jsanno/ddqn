@@ -293,73 +293,22 @@ def ddqn_vs_conventional(init_state,weights):
 
 
 
-def view_HJB_policy(dir_std):
-    num_jobs = 10
-    num_traj = 60
-
-    rb, fb = 0.9, 0.1
-    states, actions = [], []
-    gab = 1e-5
-    qg_max, qg_min = 102.06, 51.03
-    ql_max, ql_min = 0.0054, 0.0027
+def view_HJB_policy(policy, trajectories):    
+    pickle_in = open(policy, "rb")
+    hjb_policy = pickle.load(pickle_in) 
+    pickle_in = open(trajectories, "rb")
+    hjb_trajectories = pickle.load(pickle_in) 
+        
+    states_0 = hjb_policy['states_0']
+    states_1 = hjb_policy['states_1']
+    states_2 = hjb_policy['states_2']
+    states_3 = hjb_policy['states_3']
+    states_4 = hjb_policy['states_4']
+    states_5 = hjb_policy['states_5']
+    states_6 = hjb_policy['states_6']
+    states_7 = hjb_policy['states_7']
+    states_8 = hjb_policy['states_8']
     
-    for job in range(num_jobs+1):
-        for traj in range(num_traj):
-            try:
-                dir_states = dir_std + f'trajectory_{job}_{traj}/simulatedTrajectory.states'
-                dir_doses = dir_std + f'trajectory_{job}_{traj}/simulatedTrajectory.controls' 
-                
-                count = 0
-                f = open(dir_states,'r')
-                for line in f.readlines():
-                    fields = line.split('\t')
-                    xho, xgs, xrl = float(fields[0]), float(fields[1]), float(fields[2])
-                    if xho < fb or xho > rb: break
-                    else:
-                        state = np.array([xho, xgs, xrl])
-                        states.append(state)
-                        count += 1 
-
-                step = 0
-                f = open(dir_doses, 'r')
-                for line in f.readlines():
-                    fields = line.split('\t')
-                    qg, ql = float(fields[0]), float(fields[1])
-                    if 0.0-gab <= qg <= 0.0+gab and 0.0-gab <= ql <= 0.0+gab: action = 0
-                    elif 0.0-gab <= qg <= 0.0+gab and ql_min-gab <= ql <= ql_min+gab: action = 1
-                    elif 0.0-gab <= qg <= 0.0+gab and ql_max-gab <= ql <= ql_max+gab: action = 2
-                    elif qg_min-gab <= qg <= qg_min+gab and 0.0-gab <= ql <= 0.0+gab: action = 3
-                    elif qg_min-gab <= qg <= qg_min+gab and ql_min-gab <= ql <= ql_min+gab: action = 4
-                    elif qg_min-gab <= qg <= qg_min+gab and ql_max-gab <= ql <= ql_max+gab: action = 5
-                    elif qg_max-gab <= qg <= qg_max+gab and 0.0-gab <= ql <= 0.0+gab: action = 6
-                    elif qg_max-gab <= qg <= qg_max+gab and ql_min-gab <= ql <= ql_min+gab: action = 7
-                    elif qg_max-gab <= qg <= qg_max+gab and ql_max-gab <= ql <= ql_max+gab: action = 8
-                    else: print(f'Error job {job} traj {traj}')
-                    actions.append(action)
-                    step += 1
-                    if step == count: break
-                    else: pass
-                               
-            except:
-                print(f'Trajectory {job}-{traj} not found ...')
-        
-    
-    states_0, states_1, states_2, states_3, states_4, states_5 = [], [], [], [], [], []
-    states_6, states_7, states_8 = [], [], []
-    for index in range(len(states)):
-        state = states[index]
-        action = actions[index]
-        if action == 0: states_0.append(state)
-        elif action == 1: states_1.append(state)
-        elif action == 2: states_2.append(state)
-        elif action == 3: states_3.append(state)
-        elif action == 4: states_4.append(state)
-        elif action == 5: states_5.append(state)
-        elif action == 6: states_6.append(state)
-        elif action == 7: states_7.append(state)
-        elif action == 8: states_8.append(state) 
-        
-        
     figure, tax = ternary.figure(scale=1.0)
     tax.boundary()
     if states_0 != []: tax.scatter(states_0, marker="s", color='tab:blue', label='1') 
@@ -375,142 +324,12 @@ def view_HJB_policy(dir_std):
     
     tax.legend(title="Actions")
     
-    
-    for job in range(0,11):
-        traj = 0
-        while traj <= 51:  
-            try:
-                dir_states = dir_std + f'trajectory_{job}_{traj}/simulatedTrajectory.states'
-                dir_doses = dir_std + f'trajectory_{job}_{traj}/simulatedTrajectory.controls'
-                
-                states = []
-                f = open(dir_states,'r')
-                for line in f.readlines():
-                    fields = line.split('\t')
-                    xho, xgs, xrl = float(fields[0]), float(fields[1]), float(fields[2])
-                    if xho > rb or xho < fb: break
-                    else:
-                        state = np.array([xho, xgs, xrl])
-                        states.append(state)
-                        
-                tax.plot(states, color='black')  
-            except:
-                pass
-            
-            traj += 20
-    
+    for item in hjb_trajectories:
+        tax.plot(hjb_trajectories[item], color='black') 
+     
     plt.annotate('$x_{R^L}$',xy=(-0.023,-0.053))
     plt.annotate('$x_{H^O}$',xy=(0.98,-0.053))
     plt.annotate('$x_{G^S}$',xy=(0.529,0.853))
     tax.show()
     
     
-
-def view_hjb_policy(num_jobs,num_traj,dir_std):
-    rb, fb = 0.9, 0.1
-    states, actions = [], []
-    gab = 1e-5
-    qg_max, qg_min = 102.06, 51.03
-    ql_max, ql_min = 0.0054, 0.0027
-    
-    for job in range(num_jobs+1):
-        for traj in range(num_traj):
-            try:
-                dir_states = dir_std + f'trajectory_{job}_{traj}/simulatedTrajectory.states'
-                dir_doses = dir_std + f'trajectory_{job}_{traj}/simulatedTrajectory.controls' 
-                
-                count = 0
-                f = open(dir_states,'r')
-                for line in f.readlines():
-                    fields = line.split('\t')
-                    xho, xgs, xrl = float(fields[0]), float(fields[1]), float(fields[2])
-                    if xho < fb or xho > rb: break
-                    else:
-                        state = np.array([xho, xgs, xrl])
-                        states.append(state)
-                        count += 1 
-
-                step = 0
-                f = open(dir_doses, 'r')
-                for line in f.readlines():
-                    fields = line.split('\t')
-                    qg, ql = float(fields[0]), float(fields[1])
-                    if 0.0-gab <= qg <= 0.0+gab and 0.0-gab <= ql <= 0.0+gab: action = 0
-                    elif 0.0-gab <= qg <= 0.0+gab and ql_min-gab <= ql <= ql_min+gab: action = 1
-                    elif 0.0-gab <= qg <= 0.0+gab and ql_max-gab <= ql <= ql_max+gab: action = 2
-                    elif qg_min-gab <= qg <= qg_min+gab and 0.0-gab <= ql <= 0.0+gab: action = 3
-                    elif qg_min-gab <= qg <= qg_min+gab and ql_min-gab <= ql <= ql_min+gab: action = 4
-                    elif qg_min-gab <= qg <= qg_min+gab and ql_max-gab <= ql <= ql_max+gab: action = 5
-                    elif qg_max-gab <= qg <= qg_max+gab and 0.0-gab <= ql <= 0.0+gab: action = 6
-                    elif qg_max-gab <= qg <= qg_max+gab and ql_min-gab <= ql <= ql_min+gab: action = 7
-                    elif qg_max-gab <= qg <= qg_max+gab and ql_max-gab <= ql <= ql_max+gab: action = 8
-                    else: print(f'Error job {job} traj {traj}')
-                    actions.append(action)
-                    step += 1
-                    if step == count: break
-                    else: pass
-                               
-            except:
-                #print(f'Trajectory {job}-{traj} not found ...')
-                pass
-        
-    
-    states_0, states_1, states_2, states_3, states_4, states_5 = [], [], [], [], [], []
-    states_6, states_7, states_8 = [], [], []
-    for index in range(len(states)):
-        state = states[index]
-        action = actions[index]
-        if action == 0: states_0.append(state)
-        elif action == 1: states_1.append(state)
-        elif action == 2: states_2.append(state)
-        elif action == 3: states_3.append(state)
-        elif action == 4: states_4.append(state)
-        elif action == 5: states_5.append(state)
-        elif action == 6: states_6.append(state)
-        elif action == 7: states_7.append(state)
-        elif action == 8: states_8.append(state) 
-        
-        
-    figure, tax = ternary.figure(scale=1.0)
-    tax.boundary()
-    if states_0 != []: tax.scatter(states_0, marker="s", color='tab:blue', label='1') 
-    if states_1 != []: tax.scatter(states_1, marker="s", color='tab:orange', label='2')
-    if states_2 != []: tax.scatter(states_2, marker="s", color='tab:green', label='3')
-    if states_0 != []: tax.scatter(states_0, marker=".", color='tab:blue') 
-    if states_3 != []: tax.scatter(states_3, marker="s", color='tab:red', label='4')
-    if states_4 != []: tax.scatter(states_4, marker="s", color='tab:purple', label='5')
-    if states_5 != []: tax.scatter(states_5, marker="s", color='tab:brown', label='6')
-    if states_6 != []: tax.scatter(states_6, marker="s", color='tab:pink', label='7')
-    if states_7 != []: tax.scatter(states_7, marker="s", color='tab:gray', label='8')
-    if states_8 != []: tax.scatter(states_8, marker="s", color='tab:olive', label='9')
-    
-    tax.legend(title="Actions")
-    
-    
-    for job in range(0,11):
-        traj = 0
-        while traj <= 51:  
-            try:
-                dir_states = dir_std + f'trajectory_{job}_{traj}/simulatedTrajectory.states'
-                dir_doses = dir_std + f'trajectory_{job}_{traj}/simulatedTrajectory.controls'
-                
-                states = []
-                f = open(dir_states,'r')
-                for line in f.readlines():
-                    fields = line.split('\t')
-                    xho, xgs, xrl = float(fields[0]), float(fields[1]), float(fields[2])
-                    if xho > rb or xho < fb: break
-                    else:
-                        state = np.array([xho, xgs, xrl])
-                        states.append(state)
-                        
-                tax.plot(states, color='black')  
-            except:
-                pass
-            
-            traj += 20
-    
-    plt.annotate('$x_{R^L}$',xy=(-0.023,-0.053))
-    plt.annotate('$x_{H^O}$',xy=(0.98,-0.053))
-    plt.annotate('$x_{G^S}$',xy=(0.529,0.853))
-    tax.show()    
