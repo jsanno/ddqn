@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sat May  6 13:24:36 2023
-
-@author: len0x
 """
 
 from utils_plot_results import view_DDQN_policy, ddqn_vs_conventional, view_HJB_policy
@@ -131,37 +129,3 @@ if __name__ == "__main__":
     
     view_DDQN_policy(policy,weights)    
     ddqn_vs_conventional(init_state,weights)
-    
-    
-
-
-
-# Direcciones escenarios:
-
-# /mnt/7419e991-0537-4b4d-9c2c-2290441d2a66/len0x/Escritorio/Codigo-MiCancer/scenarios
-
-
-# # Datos FIGURA 1A
-# # dir_dqn = '/home/len0x/Escritorio/Codigo-MiCancer/scenarios/scenario2_final-fig1a/73/'
-# # dir_dqn = '/media/len0x/Seagate Expansion Drive/Copia_seguridad_2022_08_18/Escritorio/Codigo-Cancer-MaquinaETSIT-todo/Codigo-MiCancer/scenarios/scenario2_final-fig1a/73/'
-# dir_dqn = '/mnt/7419e991-0537-4b4d-9c2c-2290441d2a66/len0x/Escritorio/Codigo-MiCancer/scenarios/scenario2_final-fig1a/73/'
-# seed = 3
-
-# # # Datos FIGURA 1B
-# #dir_dqn = '/home/len0x/Escritorio/Codigo-MiCancer/scenarios/scenario_final-fig1b/00/'
-# # dir_dqn = '/media/len0x/Seagate Expansion Drive/Copia_seguridad_2022_08_18/Escritorio/Codigo-Cancer-MaquinaETSIT-todo/Codigo-MiCancer/scenarios/scenario_final-fig1b/00/'
-# # dir_dqn = '/mnt/7419e991-0537-4b4d-9c2c-2290441d2a66/len0x/Escritorio/Codigo-MiCancer/scenarios/scenario_final-fig1b/00/'
-# dir_dqn = '/mnt/7419e991-0537-4b4d-9c2c-2290441d2a66/len0x/Escritorio/Codigo-MiCancer/scenarios/scenario_final-fig1b/00/'
-# seed = 7
-
-# # ## Datos FIGURA 2A
-# # dir_dqn = '/home/len0x/Escritorio/Codigo-MiCancer/scenarios/scenario_final-fig2a/00/'
-# # dir_dqn = '/media/len0x/Seagate Expansion Drive/Copia_seguridad_2022_08_18/Escritorio/Codigo-Cancer-MaquinaETSIT-todo/Codigo-MiCancer/scenarios/scenario_final-fig2a/00/'
-# dir_dqn = '/mnt/7419e991-0537-4b4d-9c2c-2290441d2a66/len0x/Escritorio/Codigo-MiCancer/scenarios/scenario_final-fig2a/00/'
-# seed = 7
-
-# # # ## Datos FIGURA 2B
-# # dir_dqn = '/home/len0x/Escritorio/Codigo-MiCancer/scenarios/scenario_final-fig2b/00/'
-# #dir_dqn = '/media/len0x/Seagate Expansion Drive/Copia_seguridad_2022_08_18/Escritorio/Codigo-Cancer-MaquinaETSIT-todo/Codigo-MiCancer/scenarios/scenario_final-fig2b/00/'
-# dir_dqn = '/mnt/7419e991-0537-4b4d-9c2c-2290441d2a66/len0x/Escritorio/Codigo-MiCancer/scenarios/scenario_final-fig2b/00/'
-# seed = 0
