@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Sat May  6 13:24:36 2023
-"""
 
 from utils_plot_results import view_DDQN_policy, ddqn_vs_conventional, view_HJB_policy
 import pickle
