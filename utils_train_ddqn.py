@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Thu May  4 14:19:47 2023
-
-@author: dst
-"""
 
 import numpy as np
 from environment import Cancer
